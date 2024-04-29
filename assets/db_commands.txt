@@ -1,0 +1,57 @@
+CREATE TABLE Teams (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR NOT NULL,
+    description VARCHAR,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Users (
+    id SERIAL PRIMARY KEY,
+    isAdmin BOOLEAN NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    email VARCHAR NOT NULL UNIQUE,
+    password VARCHAR NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    team_id INTEGER REFERENCES Teams(id) NOT NULL
+);
+
+
+CREATE TABLE Models (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR NOT NULL,
+    type VARCHAR,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Manuals (
+    id SERIAL PRIMARY KEY,
+    description VARCHAR NOT NULL,
+    active BOOLEAN DEFAULT TRUE,
+    version INTEGER,
+    model_id INTEGER REFERENCES Models(id) NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE Files (
+    id SERIAL PRIMARY KEY,
+    type VARCHAR,
+    path VARCHAR NOT NULL,
+    manual_id INTEGER REFERENCES Manuals(id) NOT NULL,
+    updated_at TIMESTAMP
+);
+
+CREATE TABLE Tasks (
+    id SERIAL PRIMARY KEY,
+    readed BOOLEAN DEFAULT FALSE,
+    user_id INTEGER REFERENCES Users(id) NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    manuals_id INTEGER REFERENCES Manuals(id) NOT NULL
+);
+
+CREATE TABLE Favorites (
+    id SERIAL PRIMARY KEY,
+    manuals_id INTEGER REFERENCES Manuals(id) NOT NULL,
+    user_id INTEGER REFERENCES Users(id) NOT NULL,
+    updated_at TIMESTAMP
+);
